@@ -12,13 +12,10 @@ CONNECTION_STRING = f"mongodb+srv://user54:{DB_PASSWORD}@cluster54.w4idyqf.mongo
 client = MongoClient(CONNECTION_STRING)
 db = client.data
 
-def fetch_songs(valence, danceability, energy, tempo, loudness, margin=0.05):
+def fetch_songs(valence, danceability, energy, tempo, margin=0.05):
 
     songs_collection = db.songs
     output = []
-
-    tempo = (tempo ** 0.6) * 212.137
-    loudness = 36.758 * loudness - 37.264
 
     # Define min and max values for each attribute with formatted string precision
     attribute_ranges = {
@@ -26,7 +23,6 @@ def fetch_songs(valence, danceability, energy, tempo, loudness, margin=0.05):
         "audio_features.energy": (max(energy - margin, 0), min(energy + margin, 1)),
         "audio_features.valence": (max(valence - margin, 0), min(valence + margin, 1)),
         "audio_features.tempo": ((max(tempo - margin, 0) ** 0.6) * 212.137, (min(tempo + margin, 1) ** 0.6) * 212.137),
-        "audio_features.loudness": (36.758 * max(loudness - margin, 0) - 37.264, 36.758 * min(loudness + margin, 1) - 37.264),
     }
 
     # Construct the query
@@ -45,10 +41,10 @@ def fetch_songs(valence, danceability, energy, tempo, loudness, margin=0.05):
         if song_data:
             output.append(song_data)
     
-    if len(output) < 20:
-        fetch_songs(valence, danceability, energy, tempo, loudness, margin + 0.05)
+    if len(output) < 5:
+        return fetch_songs(valence, danceability, energy, tempo, margin + 0.05)
     else:
-        return output
+        return output if output else None
 
 """
 def fetch_api(ids):

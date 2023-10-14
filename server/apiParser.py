@@ -20,7 +20,6 @@ class apiParser:
         2. Danceability
         3. Energy
         4. Tempo
-        5. Loudness
        
         
         Here is the search query: {search_query}
