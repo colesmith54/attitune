@@ -14,7 +14,7 @@ def analyze_sentiment():
     result = apiParser.testApi(search_query)
     print(result)
 
-    return jsonify(result)
+    # return jsonify(result)
 
 if __name__=='__main__':
     app.run()
