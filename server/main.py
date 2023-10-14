@@ -8,13 +8,11 @@ CORS(app)
 
 @app.route('/api/analyze_sentiment', methods=['POST'])
 def analyze_sentiment():
-    data = request.get_json()
-    search_query = data.get('search_query')
-    # search_query="I am very sick and tired"
+    search_query = request.form.get('search_query', '')
     result = apiParser.testApi(search_query)
     print(result)
 
-    # return jsonify(result)
+    return jsonify(result)
 
 if __name__=='__main__':
     app.run()
