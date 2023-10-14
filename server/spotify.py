@@ -2,56 +2,97 @@ import requests
 import os
 from dotenv import load_dotenv
 
-def fetch_songs(valence, acousticness, energy, instrumentalness, liveness, speechiness, tempo):
+def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, margin=1):
     
-    1. Valence
-    2. Acousticness
-    3. Danceability
-    4. Energy
-    5. Instrumentalness
-    6. Liveness
-    7. Loudness
-    8. Speechiness
-    9. Tempo
-genres = ['acoustic', 'afrobeat', 'alt-rock', 'alternative', 'ambient', 'anime', 'black-metal', 'bluegrass', 'blues', 'bossanova', 'brazil', 'breakbeat', 'british', 'cantopop', 'chicago-house', 'children', 'chill', 'classical', 'club', 'comedy', 'country', 'dance', 'dancehall', 'death-metal', 'deep-house', 'detroit-techno', 'disco', 'disney', 'drum-and-bass', 'dub', 'dubstep', 'edm', 'electro', 'electronic', 'emo', 'folk', 'forro', 'french', 'funk', 'garage', 'german', 'gospel', 'goth', 'grindcore', 'groove', 'grunge', 'guitar', 'happy', 'hard-rock', 'hardcore', 'hardstyle', 'heavy-metal', 'hip-hop', 'holidays', 'honky-tonk', 'house', 'idm', 'indian', 'indie', 'indie-pop', 'industrial', 'iranian', 'j-dance', 'j-idol', 'j-pop', 'j-rock', 'jazz', 'k-pop', 'kids', 'latin', 'latino', 'malay', 'mandopop', 'metal', 'metal-misc', 'metalcore', 'minimal-techno', 'movies', 'mpb', 'new-age', 'new-release', 'opera', 'pagode', 'party', 'philippines-opm', 'piano', 'pop', 'pop-film', 'post-dubstep', 'power-pop', 'progressive-house', 'psych-rock', 'punk', 'punk-rock', 'r-n-b', 'rainy-day', 'reggae', 'reggaeton', 'road-trip', 'rock', 'rock-n-roll', 'rockabilly', 'romance', 'sad', 'salsa', 'samba', 'sertanejo', 'show-tunes', 'singer-songwriter', 'ska', 'sleep', 'songwriter', 'soul', 'soundtracks', 'spanish', 'study', 'summer', 'swedish', 'synth-pop', 'tango', 'techno', 'trance', 'trip-hop', 'turkish', 'work-out', 'world-music']
+    genres = ['acoustic', 'alt-rock', 'alternative', 'black-metal', 'bluegrass', 'blues', 'british', 'chill', 'classical', 'club', 'country', 'dance', 'death-metal', 'deep-house', 'disco', 'drum-and-bass', 'dubstep', 'electronic', 'emo', 'folk', 'funk', 'grindcore', 'groove', 'guitar', 'happy', 'hard-rock', 'hardcore', 'hardstyle', 'heavy-metal', 'hip-hop', 'holidays', 'house', 'indie', 'indie-pop', 'jazz', 'metal', 'metal-misc', 'metalcore', 'movies', 'new-release', 'opera', 'party', 'piano', 'pop', 'pop-film', 'psych-rock', 'punk', 'punk-rock', 'r-n-b', 'rainy-day', 'reggae', 'reggaeton', 'road-trip', 'rock', 'rock-n-roll', 'romance', 'sad', 'salsa', 'samba', 'show-tunes', 'sleep', 'soul', 'soundtracks', 'study', 'summer', 'synth-pop', 'tango', 'techno', 'trance', 'work-out', 'world-music']
 
-# Load environment variables from .env
-load_dotenv()
+    # Load environment variables from .env
+    load_dotenv()
 
-client_id = os.environ['SPOTIFY_CLIENT_ID']
-client_secret = os.environ['SPOTIFY_CLIENT_SECRET']
+    client_id = os.environ['SPOTIFY_CLIENT_ID']
+    client_secret = os.environ['SPOTIFY_CLIENT_SECRET']
 
-# Obtain the access token
-url = "https://accounts.spotify.com/api/token"
-headers = {
-    "Content-Type": "application/x-www-form-urlencoded"
-}
-data = {
-    'grant_type': 'client_credentials',
-    'client_id': client_id,
-    'client_secret': client_secret
-}
+    # Obtain the access token
+    url = "https://accounts.spotify.com/api/token"
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {
+        'grant_type': 'client_credentials',
+        'client_id': client_id,
+        'client_secret': client_secret
+    }
 
-response = requests.post(url, headers=headers, data=data)
+    response = requests.post(url, headers=headers, data=data)
 
-if response.status_code == 200:
-    token = response.json().get('access_token')
-else:
-    print(f"Failed to retrieve token. Status code: {response.status_code}")
-    print(response.text)
-    exit()
+    if response.status_code == 200:
+        token = response.json().get('access_token')
+    else:
+        print(f"Failed to retrieve token. Status code: {response.status_code}")
+        print(response.text)
+        exit()
 
-# Use the token to get data from the Spotify API
-endpoint = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
-headers = {
-    "Authorization": f"Bearer {token}"
-}
+    # Use the token to get recommendations based on audio features
+    endpoint = "https://api.spotify.com/v1/recommendations"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
 
-response = requests.get(endpoint, headers=headers)
+    all_recommendations = {'tracks': []}
 
-if response.status_code == 200:
-    genresJSON = response.json()
-    print(genresJSON)
-else:
-    print(f"Failed to retrieve genres. Status code: {response.status_code}")
-    print(response.text)
+    # Split the genres into chunks of 5
+    seed_genre = genres[0]
+
+    # Example audio feature parameters (replace these with your desired values)
+    params = {
+        'limit': 25,
+        'seed_genres': seed_genre,
+        'min_popularity': 25,
+
+        'min_valence': min(valence - margin, 1),
+        'max_valence': max(valence + margin, 0),
+        'target_valence': valence,
+
+        'min_acousticness': min(acousticness - margin, 1),
+        'max_acousticness': max(acousticness + margin, 0),
+        'target_acousticness': acousticness,
+
+        'min_danceability': min(danceability - margin, 1),
+        'max_danceability': max(danceability + margin, 0),
+        'target_danceability': danceability,
+
+        'min_energy': min(energy - margin, 1),
+        'max_energy': max(energy + margin, 0),
+        'target_energy': energy,
+
+        'min_instrumentalness': min(instrumentalness - margin, 1),
+        'max_instrumentalness': max(instrumentalness + margin, 0),
+        'target_instrumentalness': instrumentalness,
+
+        'min_liveness': min(liveness - margin, 1),
+        'max_liveness': max(liveness + margin, 0),
+        'target_liveness': liveness,
+
+        'min_loudness': min(loudness - margin, 1),
+        'max_loudness': max(loudness + margin, 0),
+        'target_loudness': loudness,
+
+        'min_speechiness': min(speechiness - margin, 1),
+        'max_speechiness': max(speechiness + margin, 0),
+        'target_speechiness': speechiness,
+    }
+
+    response = requests.get(endpoint, headers=headers, params=params)
+
+    if response.status_code == 200:
+        recommendations = response.json()
+        print(recommendations)
+        all_recommendations['tracks'].extend(recommendations['tracks'])
+    else:
+        print(f"Failed to retrieve recommendations for genre {seed_genre}.")
+        print(f"Status code: {response.status_code}")
+        print(f"Response content: {response.text}")
+
+    print(all_recommendations)
+
+fetch_songs(0.50, 0.35, 0.70, 0.75, 0.30, 0.75, 0.65, 0.80)
