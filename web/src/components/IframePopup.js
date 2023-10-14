@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Iframe from 'react-iframe';
 import styles from '../app/styles/components/iframePopup.module.scss';
+import Cross from '../app/svgs/circle-xmark-regular.svg'
 
 
 function IframePopup({ url }) {
@@ -25,7 +26,7 @@ function IframePopup({ url }) {
 
       {visible && (
         <div className={styles['iframe-overlay']}>
-          <button className={styles['close-button']} onClick={() => setVisible(false)}>X</button>
+          <button className={styles['close-button']} onClick={() => setVisible(false)}><Cross /></button>
           <Iframe url={url}
                   width="640px"
                   height="320px"
