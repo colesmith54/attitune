@@ -2,7 +2,7 @@ import requests
 import os
 from dotenv import load_dotenv
 
-def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, margin=1):
+def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, margin=1.0):
     
     genres = ['acoustic', 'alt-rock', 'alternative', 'black-metal', 'bluegrass', 'blues', 'british', 'chill', 'classical', 'club', 'country', 'dance', 'death-metal', 'deep-house', 'disco', 'drum-and-bass', 'dubstep', 'electronic', 'emo', 'folk', 'funk', 'grindcore', 'groove', 'guitar', 'happy', 'hard-rock', 'hardcore', 'hardstyle', 'heavy-metal', 'hip-hop', 'holidays', 'house', 'indie', 'indie-pop', 'jazz', 'metal', 'metal-misc', 'metalcore', 'movies', 'new-release', 'opera', 'party', 'piano', 'pop', 'pop-film', 'psych-rock', 'punk', 'punk-rock', 'r-n-b', 'rainy-day', 'reggae', 'reggaeton', 'road-trip', 'rock', 'rock-n-roll', 'romance', 'sad', 'salsa', 'samba', 'show-tunes', 'sleep', 'soul', 'soundtracks', 'study', 'summer', 'synth-pop', 'tango', 'techno', 'trance', 'work-out', 'world-music']
 
@@ -38,16 +38,11 @@ def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, l
         "Authorization": f"Bearer {token}"
     }
 
-    all_recommendations = {'tracks': []}
-
-    # Split the genres into chunks of 5
-    seed_genre = genres[0]
-
     # Example audio feature parameters (replace these with your desired values)
     params = {
-        'limit': 25,
-        'seed_genres': seed_genre,
-        'min_popularity': 25,
+        'limit': 100,
+        'seed_genres': genres[0],
+        'min_popularity': 50,
 
         'min_valence': min(valence - margin, 1),
         'max_valence': max(valence + margin, 0),
@@ -87,12 +82,7 @@ def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, l
     if response.status_code == 200:
         recommendations = response.json()
         print(recommendations)
-        all_recommendations['tracks'].extend(recommendations['tracks'])
     else:
-        print(f"Failed to retrieve recommendations for genre {seed_genre}.")
-        print(f"Status code: {response.status_code}")
-        print(f"Response content: {response.text}")
-
-    print(all_recommendations)
+        print(response.text)
 
 fetch_songs(0.50, 0.35, 0.70, 0.75, 0.30, 0.75, 0.65, 0.80)
