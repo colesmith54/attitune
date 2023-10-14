@@ -6,7 +6,7 @@ app=Flask(__name__)
 
 CORS(app)
 
-@app.route('/analyze_sentiment', methods=['POST'])
+@app.route('/api/analyze_sentiment', methods=['POST'])
 def analyze_sentiment():
     data = request.get_json()
     search_query = data.get('search_query')
