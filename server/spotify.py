@@ -1,16 +1,22 @@
 import requests
 import os
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
-def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, margin=1.0):
+def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, liveness, speechiness, margin=1.0):
     
-    genres = ['acoustic', 'alt-rock', 'alternative', 'black-metal', 'bluegrass', 'blues', 'british', 'chill', 'classical', 'club', 'country', 'dance', 'death-metal', 'deep-house', 'disco', 'drum-and-bass', 'dubstep', 'electronic', 'emo', 'folk', 'funk', 'grindcore', 'groove', 'guitar', 'happy', 'hard-rock', 'hardcore', 'hardstyle', 'heavy-metal', 'hip-hop', 'holidays', 'house', 'indie', 'indie-pop', 'jazz', 'metal', 'metal-misc', 'metalcore', 'movies', 'new-release', 'opera', 'party', 'piano', 'pop', 'pop-film', 'psych-rock', 'punk', 'punk-rock', 'r-n-b', 'rainy-day', 'reggae', 'reggaeton', 'road-trip', 'rock', 'rock-n-roll', 'romance', 'sad', 'salsa', 'samba', 'show-tunes', 'sleep', 'soul', 'soundtracks', 'study', 'summer', 'synth-pop', 'tango', 'techno', 'trance', 'work-out', 'world-music']
+    genres = ['acoustic', 'alt-rock', 'alternative', 'black-metal', 'bluegrass', 'blues', 'british', 'chill', 'classical', 'club', 'country', 'dance', 'death-metal', 'deep-house', 'disco', 'drum-and-bass', 'dubstep', 'electronic', 'emo', 'folk', 'funk', 'grindcore', 'groove', 'guitar', 'happy', 'hard-rock', 'hardcore', 'hardstyle', 'heavy-metal', 'hip-hop', 'holidays', 'house', 'indie', 'indie-pop', 'jazz', 'metal', 'metal-misc', 'metalcore', 'movies', 'new-release', 'opera', 'party', 'piano', 'pop', 'pop-film', 'psych-rock', 'punk', 'punk-rock', 'r-n-b', 'rainy-day', 'reggae', 'reggaeton', 'road-trip', 'rock', 'rock-n-roll', 'romance', 'sad', 'salsa', 'samba', 'show-tunes', 'sleep', 'soul', 'soundtracks', 'spanish', 'study', 'summer', 'synth-pop', 'tango', 'techno', 'trance', 'work-out', 'world-music']
 
     # Load environment variables from .env
     load_dotenv()
 
     client_id = os.environ['SPOTIFY_CLIENT_ID']
     client_secret = os.environ['SPOTIFY_CLIENT_SECRET']
+    database_password = os.environ['DB_PASSWORD']
+
+    CONNECTION_STRING = f"mongodb+srv://user54:{database_password}@cluster54.w4idyqf.mongodb.net/?retryWrites=true&w=majority"
+    client = MongoClient(CONNECTION_STRING)
+    db = client.data
 
     # Obtain the access token
     url = "https://accounts.spotify.com/api/token"
@@ -27,7 +33,6 @@ def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, l
 
     if response.status_code == 200:
         token = response.json().get('access_token')
-        print(token)
     else:
         print(f"Failed to retrieve token. Status code: {response.status_code}")
         print(response.text)
@@ -42,7 +47,7 @@ def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, l
     # Example audio feature parameters (replace these with your desired values)
     params = {
         'limit': 100,
-        'seed_genres': genres[0],
+        'seed_genres': genres[70],
         'min_popularity': 50,
 
         'min_valence': min(valence - margin, 1),
@@ -69,10 +74,6 @@ def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, l
         'max_liveness': max(liveness + margin, 0),
         'target_liveness': liveness,
 
-        'min_loudness': min(loudness - margin, 1),
-        'max_loudness': max(loudness + margin, 0),
-        'target_loudness': loudness,
-
         'min_speechiness': min(speechiness - margin, 1),
         'max_speechiness': max(speechiness + margin, 0),
         'target_speechiness': speechiness,
@@ -82,8 +83,20 @@ def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, l
 
     if response.status_code == 200:
         recommendations = response.json()
-        print(recommendations)
+
+        song_ids = [track["id"] for track in recommendations['tracks']]
+        endpoint = "https://api.spotify.com/v1/audio-features"
+
+        params = {
+            'ids': ",".join(song_ids)
+        }
+
+        response = requests.get(endpoint, headers=headers, params=params)
+        response_data = response.json()
+        entries = [{"id": id, "audio_features": audio_features} for id, audio_features in zip(song_ids, response_data['audio_features'])]
+
+        db.songs.insert_many(entries, ordered=False)
     else:
         print(response.text)
 
-fetch_songs(0.50, 0.35, 0.70, 0.75, 0.30, 0.75, 0.65, 0.80)
+fetch_songs(0.50, 0.35, 0.70, 0.75, 0.30, 0.75, 0.80)
