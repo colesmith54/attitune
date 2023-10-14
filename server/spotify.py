@@ -47,7 +47,7 @@ def fetch_songs(valence, danceability, energy, tempo, margin=0.05):
         return output if output else None
 
 
-def fetch_api():
+def fetch_token():
     
     # Load environment variables from .env
     load_dotenv()
