@@ -3,7 +3,12 @@ from decouple import config
 import json
 
 secret_key=config('SECRET_KEY')
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+
+secret_key = os.environ['SECRET_KEY']
 class apiParser:
     
     def testApi(search_query):
@@ -37,7 +42,7 @@ class apiParser:
         # print(json_API)
         return json_API
     
-        # data=testApi("I am very sick and tired")
+    data=testApi("I am very sick and tired")
 
 
 
