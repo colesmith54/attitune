@@ -1,5 +1,4 @@
 import openai
-from decouple import config
 import json
 
 secret_key=config('SECRET_KEY')
