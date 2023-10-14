@@ -3,8 +3,7 @@ import Iframe from 'react-iframe';
 import styles from '../app/styles/components/iframePopup.module.scss';
 import Cross from '../app/svgs/circle-xmark-regular.svg';
 
-function IframePopup({ url }) {
-  const [visible, setVisible] = useState(false);  // Visibility state inside the IframePopup
+function IframePopup({ url, visible, setVisible }) {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Escape' && visible) {
@@ -34,8 +33,6 @@ function IframePopup({ url }) {
 
   return (
     <>
-      <button onClick={() => setVisible(true)}>Show Iframe</button>
-
       {visible && (
         <div className={styles['iframe-overlay']}>
           <button className={styles['close-button']} onClick={() => setVisible(false)}><Cross /></button>

@@ -1,8 +1,19 @@
 'use client';
-import React, { useContext,useState ,useEffect} from 'react'
+import React, {useState ,useEffect} from 'react'
 import defaultdata from '../playlist.json';
+import IframePopup from "@/components/IframePopup";
 
 const Playlist = ({ playlistData }) =>{
+
+const [visible, setVisible] = useState(false);  // Visibility state inside the IframePopup
+const [uri, updateUri] = useState('2RlgNHKcydI9sayD2Df2xp')
+
+const onSongClick = (item) => {
+    const item_uri = item.song_uri
+    updateUri(item_uri.split(':')[2]);
+    setVisible(true);
+}
+
 function millisecondsToMinutes(milliseconds) {
     const minutes = Math.floor(milliseconds / 60000);
     const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
@@ -12,6 +23,7 @@ function millisecondsToMinutes(milliseconds) {
    
     const playlist_data = playlistData ?? defaultdata
     return (
+<>
     <div className="overflow-x-auto">
     <table className="min-w-full bg-gradient-to-r from-gray-900 to-indigo-700">
     <thead>
@@ -35,7 +47,7 @@ function millisecondsToMinutes(milliseconds) {
     </thead>
     <tbody>
       {playlist_data.map((item, index) => (
-        <tr key={item._id} className="hover:bg-indigo-600">
+        <tr key={item._id} onClick={() => onSongClick(item)} className="hover:bg-indigo-600">
           <td className="px-3 py-1 whitespace-nowrap cursor-pointer group">
             {index + 1} {/* Row number */}
            </td>
@@ -56,7 +68,10 @@ function millisecondsToMinutes(milliseconds) {
     </tbody>
   </table>
 </div>
-
+<IframePopup visible={visible} setVisible={setVisible}
+    url={`https://open.spotify.com/embed/track/${uri}?utm_source=generator`}
+/>
+</>
     );
       
 };
