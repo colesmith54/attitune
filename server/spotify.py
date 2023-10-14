@@ -46,9 +46,8 @@ def fetch_songs(valence, danceability, energy, tempo, margin=0.05):
     else:
         return output if output else None
 
-"""
-def fetch_api(ids):
-    
+
+def fetch_api():
     
     # Load environment variables from .env
     load_dotenv()
@@ -76,54 +75,6 @@ def fetch_api(ids):
         print(response.text)
         exit()
 
-    # Use the token to get recommendations based on audio features
-    endpoint = "https://api.spotify.com/v1/tracks"
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
-
-    # Example audio feature parameters (replace these with your desired values)
-    params = {
-        'ids': ",".join(ids)
-    }
-
-    response = requests.get(endpoint, headers=headers, params=params)
-
-    entries_to_insert = []
-
-    if response.status_code == 200:
-        response_data = response.json()
-        for track in response_data['tracks']:
-            # Extract necessary details
-            album_image = track["album"]["images"][0]["url"] if track["album"]["images"] else None
-            artist_names = [artist["name"] for artist in track["artists"]]
-            song_duration = track["duration_ms"]
-            song_name = track["name"]
-            song_uri = track["uri"]
-
-            # Construct the database entry
-            db_entry = {
-                "_id": track["id"],  # Use _id as the unique key for MongoDB
-                "album_image": album_image,
-                "artist_names": artist_names,
-                "song_duration": song_duration,
-                "song_name": song_name,
-                "song_uri": song_uri
-            }
-
-            # Append the entry to our list
-            entries_to_insert.append(db_entry)
-
-        try:
-            songs_collection.insert_many(entries_to_insert, ordered=False)
-        except:
-            # This will catch the duplicate key errors and other bulk write errors, but the program will continue.
-            # The non-duplicate documents in the list will still have been inserted.
-            pass
-
-    else:
-        print(f"Failed to retrieve recommendations. Status code: {response.status_code}")
-        print(response.text)
 
 def copy_to_new_collection():
     db = client.data
@@ -141,7 +92,6 @@ def copy_to_new_collection():
 
     print("Data copied successfully!")
 
-copy_to_new_collection()
 
 def remove_duplicates(collection):
     # Fetch all distinct 'id' values
@@ -154,6 +104,3 @@ def remove_duplicates(collection):
         if keeper:
             # Delete other occurrences
             collection.delete_many({'_id': {'$ne': keeper['_id']}, 'id': unique_id})
-
-remove_duplicates(db.songs)
-"""
