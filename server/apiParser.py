@@ -1,7 +1,6 @@
 import openai
 import json
 
-secret_key=config('SECRET_KEY')
 from dotenv import load_dotenv
 import os
 
