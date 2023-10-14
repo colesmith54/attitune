@@ -22,8 +22,7 @@ class apiParser:
         4. Energy
         5. Instrumentalness
         6. Liveness
-        7. Loudness
-        8. Speechiness
+        7. Speechiness
 
        
         
