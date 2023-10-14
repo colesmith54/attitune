@@ -46,9 +46,8 @@ def fetch_songs(valence, danceability, energy, tempo, margin=0.05):
     else:
         return output if output else None
 
-
+"""
 def fetch_token():
-    
     # Load environment variables from .env
     load_dotenv()
 
@@ -74,7 +73,7 @@ def fetch_token():
         print(f"Failed to retrieve token. Status code: {response.status_code}")
         print(response.text)
         exit()
-
+"""
 
 def copy_to_new_collection():
     db = client.data
