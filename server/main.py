@@ -12,8 +12,8 @@ def analyze_sentiment():
     search_query = request.form.get('search_query', '')
     open_ai_scores = apiParser.testApi(search_query)
     results = fetch_songs(*open_ai_scores.values())
-
     print([song["song_name"] for song in results])
+   
     return jsonify(results)
 
 
