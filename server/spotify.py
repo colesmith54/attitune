@@ -61,7 +61,7 @@ def fetch_token():
         "Content-Type": "application/x-www-form-urlencoded"
     }
     data = {
-        'grant_type': 'client_credentials',
+        'grant_type': 'authorizaion_code',
         'client_id': client_id,
         'client_secret': client_secret
     }
