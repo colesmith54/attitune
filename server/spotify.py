@@ -41,7 +41,7 @@ def fetch_songs(valence, danceability, energy, tempo, margin=0.05):
         if song_data:
             output.append(song_data)
     
-    if len(output) < 5:
+    if len(output) < 10:
         return fetch_songs(valence, danceability, energy, tempo, margin + 0.05)
     else:
         return output if output else None
