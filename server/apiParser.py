@@ -31,7 +31,7 @@ class apiParser:
                 {"role": "user", "content": prompt}
             ]
         )
+        print(response.choices[0].message.content)
         json_API = json.loads(response.choices[0].message.content)
-        print(json_API)
         return json_API
        

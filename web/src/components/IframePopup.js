@@ -1,12 +1,24 @@
-'use client';
 import { useState, useEffect } from 'react';
 import Iframe from 'react-iframe';
 import styles from '../app/styles/components/iframePopup.module.scss';
-import Cross from '../app/svgs/circle-xmark-regular.svg'
-
+import Cross from '../app/svgs/circle-xmark-regular.svg';
 
 function IframePopup({ url }) {
   const [visible, setVisible] = useState(false);  // Visibility state inside the IframePopup
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape' && visible) {
+      setVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [visible]);
 
   useEffect(() => {
     if (visible) {
