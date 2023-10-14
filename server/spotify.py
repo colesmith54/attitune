@@ -27,6 +27,7 @@ def fetch_songs(valence, acousticness, danceability, energy, instrumentalness, l
 
     if response.status_code == 200:
         token = response.json().get('access_token')
+        print(token)
     else:
         print(f"Failed to retrieve token. Status code: {response.status_code}")
         print(response.text)
