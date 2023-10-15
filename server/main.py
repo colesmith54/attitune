@@ -11,8 +11,7 @@ CORS(app)
 
 load_dotenv()
 
-client_id = os.environ['SPOTIFY_CLIENT_ID']
-client_secret = os.environ['SPOTIFY_CLIENT_SECRET']
+
 
 @app.route('/api/analyze_sentiment', methods=['POST'])
 def analyze_sentiment():
