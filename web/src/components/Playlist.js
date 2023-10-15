@@ -24,8 +24,8 @@ function millisecondsToMinutes(milliseconds) {
     const playlist_data = playlistData ?? defaultdata
     return (
 <>
-    <div className="overflow-x-auto">
-    <table className="min-w-full bg-gradient-to-r from-gray-900 to-indigo-700">
+    <div className="overflow-x-auto shadow-[0_-35px_60px_-15px_rgba(255,255,255,0.1)]">
+    <table className="min-w-full bg-gradient-to-r from-black to-violet-500">
     <thead>
       <tr>
         <th className="px-2 py-4 whitespace-nowrap text-left">
@@ -47,7 +47,7 @@ function millisecondsToMinutes(milliseconds) {
     </thead>
     <tbody>
       {playlist_data.map((item, index) => (
-        <tr key={item._id} onClick={() => onSongClick(item)} className="hover:bg-indigo-600">
+        <tr key={item._id} onClick={() => onSongClick(item)} className="hover:bg-violet-500">
           <td className="px-3 py-1 whitespace-nowrap cursor-pointer group">
             {index + 1} {/* Row number */}
            </td>

@@ -9,7 +9,7 @@ const SearchBox = (props) => {
         }
     };
     return (
-        <div>
+        <div className='my-10'>
             <form method="post" onSubmit={props.handleFormSubmit}>
                 <label htmlFor="search" className="block text-large font-large leading-6 text-white">How is your mood?</label>
                 <div className="mt-2">
@@ -23,7 +23,7 @@ const SearchBox = (props) => {
                     onKeyDown={handleKeyDown}
                 ></textarea>
                 </div>
-                <button type="submit" className="bg-violet-500 hover:bg-indigo-400 text-white font-semibold px-6 py-3 rounded-md">
+                <button type="submit" className="bg-violet-500 hover:bg-indigo-400 text-white font-semibold my-8 px-6 py-3 rounded-md">
                     Show Recommendations
                 </button>
             </form>
