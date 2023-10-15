@@ -49,11 +49,11 @@ class apiParser:
         json_API = json.loads(response.choices[0].message.content)
         return json_API
     
-    def playListNameCreation(self,search_query):
+    def playListNameCreation(self):
 
         prompt=f"""You will be given an input from the user describing their mood.You will give me output in map format
         "playlist_name":"value".The value will be the playlist name that you will generate and should not contain more than two words 
-          Make it unique and no special characters.The user input is :{search_query}
+          Make it unique and no special characters.The user input is :{self.search_query}
 
                 """
         openai.api_key =secret_key
