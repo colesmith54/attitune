@@ -34,4 +34,23 @@ class apiParser:
         print(response.choices[0].message.content)
         json_API = json.loads(response.choices[0].message.content)
         return json_API
+    
+    def playListNameCreation(search_query):
+
+        prompt=f"""You will be given an input from the user describing their mood.You will give me output in map format
+        "playlist_name":"value".The value will be the playlist name that you will generate and should not contain more than two words 
+          Make it unique and no special characters.The user input is :{search_query}
+
+                """
+        openai.api_key =secret_key
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+        print(response.choices[0].message.content)
+        res=json.loads(response.choices[0].message.content)
+        print(res["playlist_name"])
+        return res["playlist_name"]
        
