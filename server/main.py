@@ -17,11 +17,7 @@ client_secret = os.environ['SPOTIFY_CLIENT_SECRET']
 @app.route('/api/analyze_sentiment', methods=['POST'])
 def analyze_sentiment():
     search_query = request.form.get('search_query', '')
-    
-    parser= apiParser(search_query)
-    response_data=parser.get_response_data()
-    open_ai_scores=response_data["open_ai_scores"]
-    playlistName=response_data["playlistName"]
+    open_ai_scores= apiParser.testApi(search_query)
     results = fetch_songs(*open_ai_scores.values())
    
     return jsonify(results)
