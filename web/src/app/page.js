@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <div className={`min-h-screen`}>
       <Header />
-      <main className="flex min-h-screen flex-col mt-5 px-24">
+      <main className="flex min-h-screen flex-col mt-2 md:mt-5 md:px-24">
         <SearchBox handleFormSubmit={handleFormSubmit} setSearchQuery={setSearchQuery} searchQuery={searchQuery}  />
         <div className="col-md-6">
           <div className="playlist"><Playlist playlistData={playlistData}/></div>

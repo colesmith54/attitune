@@ -9,13 +9,14 @@ const SearchBox = (props) => {
         }
     };
     return (
-        <div className='my-10'>
+        <div className='my-4 md:my-10 mx-4 md:mx-0'>
             <form method="post" onSubmit={props.handleFormSubmit}>
                 <label htmlFor="search" className="block text-large font-large leading-6 text-white">How is your mood?</label>
                 <div className="mt-2">
                 <textarea
                     id="search"
                     name="search_query"
+                    placeholder="Enter your mood... get matching songs..."
                     rows="2"
                     className={`${styles.searchBox} border-white focus:border-[#7c3aed] rounded`}
                     value={props.searchQuery}
@@ -23,9 +24,11 @@ const SearchBox = (props) => {
                     onKeyDown={handleKeyDown}
                 ></textarea>
                 </div>
-                <button type="submit" className="bg-violet-500 hover:bg-indigo-400 text-white font-semibold my-8 px-6 py-3 rounded-md">
+                <div className='text-center md:text-left'>
+                <button type="submit" className="w-full md:max-w-xs bg-violet-500 hover:bg-indigo-400 text-white font-semibold my-2 md:my-8 px-6 py-3 rounded-md">
                     Show Recommendations
                 </button>
+                </div>
             </form>
         </div>
     )
