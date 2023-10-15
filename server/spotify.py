@@ -6,7 +6,7 @@ import requests
 load_dotenv() 
 
 # MongoDB connection
-DB_PASSWORD = os.environ['DB_PASSWORD']
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
 CONNECTION_STRING = f"mongodb+srv://user54:{DB_PASSWORD}@cluster54.w4idyqf.mongodb.net/?retryWrites=true&w=majority"
 
 client = MongoClient(CONNECTION_STRING)

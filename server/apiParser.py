@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-secret_key = os.environ['SECRET_KEY']
+secret_key = os.environ.get('SECRET_KEY')
 class apiParser:
     
     def testApi(search_query):
