@@ -15,7 +15,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append('search_query', data);
       
-      fetch("http://127.0.0.1:5000/api/analyze_sentiment", {
+      fetch("https://attitune-server.onrender.com/api/analyze_sentiment", {
           method: 'post',
           mode: "cors",
           cache: "no-store",
